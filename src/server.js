@@ -1,6 +1,7 @@
-const express = require('express');
-const cors = require('cors');
-const pino = require('pino-http');
+import express from 'express';
+import cors from 'cors';
+import pino from 'pino-http';
+import contactsRouter from './routes/contactsRouter.js';
 
 function setupServer() {
   const app = express();
@@ -9,7 +10,7 @@ function setupServer() {
 
   app.use(express.json());
 
-  const contactsRouter = require('./routes/contactsRouter');
+  console.log('Registering route: /contacts');
   app.use('/contacts', contactsRouter);
 
   app.use('*', (req, res) => {
@@ -22,4 +23,4 @@ function setupServer() {
   });
 }
 
-module.exports = { setupServer };
+export { setupServer };

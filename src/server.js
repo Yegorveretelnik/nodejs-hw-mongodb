@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
-import contactsRouter from './routes/contactsRouter.js';
+import contactsRouter from './routes/contacts.js';
 
 function setupServer() {
   const app = express();

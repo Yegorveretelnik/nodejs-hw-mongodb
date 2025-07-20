@@ -1,11 +1,24 @@
-import Contact from '../models/Contact.js';
+import { ContactModel } from '../db/models/contact.js'; // імпорт твоєї моделі
 
-async function fetchContacts() {
-  return Contact.find();
-}
+export const fetchAllContacts = async () => {
+  return await ContactModel.find();
+};
 
-async function fetchContactById(id) {
-  return Contact.findById(id);
-}
+export const fetchContactById = async (contactId) => {
+  return await ContactModel.findById(contactId);
+};
 
-export { fetchContacts, fetchContactById };
+export const createContact = async (payload) => {
+  return await ContactModel.create(payload);
+};
+
+export const updateContact = async (contactId, payload) => {
+  return await ContactModel.findByIdAndUpdate(contactId, payload, {
+    new: true,
+  });
+};
+
+export const deleteContact = async (contactId) => {
+  const result = await ContactModel.findByIdAndDelete(contactId);
+  return Boolean(result); // повертає true якщо був видалений, false — якщо ні
+};

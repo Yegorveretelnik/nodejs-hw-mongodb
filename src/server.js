@@ -10,7 +10,8 @@ function setupServer() {
   app.use(pino());
 
   app.use(express.json());
-
+  app.use(errorHandler);
+  app.use(notFoundHandler);
   console.log('Registering route: /contacts');
   app.use('/contacts', contactsRouter);
 
@@ -23,7 +24,5 @@ function setupServer() {
     console.log(`Server is running on port ${PORT}`);
   });
 }
-app.use(errorHandler);
-app.use('*', notFoundHandler);
 
 export { setupServer };

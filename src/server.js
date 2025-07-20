@@ -10,14 +10,11 @@ function setupServer() {
   app.use(pino());
 
   app.use(express.json());
-  app.use(errorHandler);
-  app.use(notFoundHandler);
+
   console.log('Registering route: /contacts');
   app.use('/contacts', contactsRouter);
-
-  app.use((req, res) => {
-    res.status(404).json({ message: 'Not found' });
-  });
+  app.use(errorHandler);
+  app.use(notFoundHandler);
 
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {

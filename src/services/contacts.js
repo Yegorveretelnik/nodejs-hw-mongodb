@@ -1,4 +1,4 @@
-import { ContactModel } from '../db/models/contact.js'; // імпорт твоєї моделі
+import { ContactModel } from '../db/models/contact.js';
 
 export const fetchAllContacts = async () => {
   return await ContactModel.find();
@@ -20,5 +20,5 @@ export const updateContact = async (contactId, payload) => {
 
 export const deleteContact = async (contactId) => {
   const result = await ContactModel.findByIdAndDelete(contactId);
-  return Boolean(result); // повертає true якщо був видалений, false — якщо ні
+  return Boolean(result);
 };

@@ -8,11 +8,31 @@ import {
 } from '../services/contacts.js';
 
 export const getAllContacts = async (req, res) => {
-  const contacts = await fetchAllContacts();
+  const {
+    page = 1,
+    perPage = 10,
+    sortBy = 'name',
+    sortOrder = 'asc',
+    type,
+    isFavourite,
+  } = req.query;
+
+  const filter = {};
+  if (type) filter.contactType = type;
+  if (isFavourite !== undefined) filter.isFavourite = isFavourite === 'true';
+
+  const result = await fetchAllContacts({
+    page: Number(page),
+    perPage: Number(perPage),
+    sortBy,
+    sortOrder,
+    filter,
+  });
+
   res.status(200).json({
     status: 200,
-    message: 'Successfully fetched all contacts!',
-    data: contacts,
+    message: 'Successfully found contacts!',
+    data: result,
   });
 };
 

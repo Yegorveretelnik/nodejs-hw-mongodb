@@ -2,8 +2,8 @@ import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
 import { randomBytes } from 'crypto';
 
-import UsersCollection from '../db/models/user.js';
-import SessionsCollection from '../db/models/session.js';
+import UsersCollection from '../models/User.js';
+import SessionsCollection from '../models/Session.js';
 
 const FIFTEEN_MINUTES = 15 * 60 * 1000;
 const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;

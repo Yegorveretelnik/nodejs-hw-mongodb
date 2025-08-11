@@ -105,3 +105,8 @@ export const logoutUser = async (refreshTokenFromCookie) => {
 
   await SessionsCollection.deleteOne({ _id: session._id });
 };
+
+export const changeUserPassword = async (userId, newPassword) => {
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  await UsersCollection.findByIdAndUpdate(userId, { password: hashedPassword });
+};

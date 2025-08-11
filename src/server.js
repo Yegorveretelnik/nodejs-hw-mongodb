@@ -13,6 +13,9 @@ function setupServer() {
   app.use(pino());
 
   app.use(express.json());
+  app.get('/', (req, res) => {
+    res.send('API is running');
+  });
 
   console.log('Registering route: /contacts');
   app.use('/auth', authRouter);

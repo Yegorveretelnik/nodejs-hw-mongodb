@@ -95,7 +95,6 @@ export const sendResetEmail = async (req, res, next) => {
       throw createHttpError(404, 'User not found!');
     }
 
-    // Генерация JWT с email, сроком 5 минут
     const token = jwt.sign({ email }, process.env.JWT_SECRET, {
       expiresIn: '5m',
     });

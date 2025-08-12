@@ -65,7 +65,7 @@ export const createContactController = async (req, res, next) => {
     if (req.file && req.file.cloudinaryUrl) {
       req.body.photoUrl = req.file.cloudinaryUrl;
     }
-
+    req.body.userId = req.user._id;
     const newContact = await createContact(req.body, req.user._id);
 
     res.status(201).json({
@@ -83,7 +83,7 @@ export const updateContactController = async (req, res, next) => {
     if (req.file && req.file.cloudinaryUrl) {
       req.body.photoUrl = req.file.cloudinaryUrl;
     }
-
+    req.body.userId = req.user._id;
     const updatedContact = await updateContact(
       req.params.contactId,
       req.user._id,

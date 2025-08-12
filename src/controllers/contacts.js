@@ -62,7 +62,12 @@ export const getContactById = async (req, res, next) => {
 
 export const createContactController = async (req, res, next) => {
   try {
-    const newContact = await createContact(req.body, req.file, req.user._id);
+    if (req.file && req.file.cloudinaryUrl) {
+      req.body.photoUrl = req.file.cloudinaryUrl;
+    }
+
+    const newContact = await createContact(req.body, req.user._id);
+
     res.status(201).json({
       status: 201,
       message: 'Successfully created a contact!',
@@ -75,11 +80,14 @@ export const createContactController = async (req, res, next) => {
 
 export const updateContactController = async (req, res, next) => {
   try {
+    if (req.file && req.file.cloudinaryUrl) {
+      req.body.photoUrl = req.file.cloudinaryUrl;
+    }
+
     const updatedContact = await updateContact(
       req.params.contactId,
       req.user._id,
       req.body,
-      req.file,
     );
 
     if (!updatedContact) {

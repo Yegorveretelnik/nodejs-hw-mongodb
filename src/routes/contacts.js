@@ -7,7 +7,7 @@ import {
   deleteContactController,
 } from '../controllers/contacts.js';
 import { authenticate } from '../middlewares/authenticate.js';
-import { uploadMiddleware } from '../middlewares/uploadMiddleware.js';
+import { upload, uploadToCloudinary } from '../middlewares/uploadMiddleware.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import {
   contactSchema,
@@ -22,13 +22,15 @@ router.get('/', getAllContacts);
 router.get('/:contactId', getContactById);
 router.post(
   '/',
-  uploadMiddleware.single('photo'),
+  upload.single('photo'),
+  uploadToCloudinary,
   validateBody(contactSchema),
   createContactController,
 );
 router.patch(
   '/:contactId',
-  uploadMiddleware.single('photo'),
+  upload.single('photo'),
+  uploadToCloudinary,
   validateBody(contactUpdateSchema),
   updateContactController,
 );

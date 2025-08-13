@@ -16,10 +16,6 @@ export const authenticate = async (req, res, next) => {
       throw createHttpError(401, 'Not authorized');
     }
 
-    if (session.accessTokenValidUntil < new Date()) {
-      throw createHttpError(401, 'Access token expired');
-    }
-
     const user = await User.findById(session.userId);
     if (!user) {
       throw createHttpError(401, 'User not found');

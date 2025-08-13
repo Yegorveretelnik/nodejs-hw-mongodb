@@ -14,13 +14,14 @@ export const getAllContacts = async (req, res, next) => {
       perPage = 10,
       sortBy = 'name',
       sortOrder = 'asc',
-      type,
+      contactType,
       isFavourite,
     } = req.query;
 
-    const filter = { userId: req.user._id };
-    if (type) filter.contactType = type;
-    if (isFavourite !== undefined) filter.isFavourite = isFavourite === 'true';
+    const filter = {};
+    if (typeof contactType === 'string') filter.contactType = contactType;
+    if (typeof isFavourite !== 'undefined')
+      filter.isFavourite = String(isFavourite) === 'true';
 
     const result = await fetchAllContacts({
       userId: req.user._id,
@@ -63,10 +64,11 @@ export const getContactById = async (req, res, next) => {
 export const createContactController = async (req, res, next) => {
   try {
     if (req.file && req.file.cloudinaryUrl) {
-      req.body.photoUrl = req.file.cloudinaryUrl;
+      req.body.photo = req.file.cloudinaryUrl;
     }
     req.body.userId = req.user._id;
-    const newContact = await createContact(req.body, req.user._id);
+
+    const newContact = await createContact(req.body);
 
     res.status(201).json({
       status: 201,
@@ -81,13 +83,13 @@ export const createContactController = async (req, res, next) => {
 export const updateContactController = async (req, res, next) => {
   try {
     if (req.file && req.file.cloudinaryUrl) {
-      req.body.photoUrl = req.file.cloudinaryUrl;
+      req.body.photo = req.file.cloudinaryUrl;
     }
-    req.body.userId = req.user._id;
+
     const updatedContact = await updateContact(
       req.params.contactId,
-      req.user._id,
       req.body,
+      req.user._id,
     );
 
     if (!updatedContact) {

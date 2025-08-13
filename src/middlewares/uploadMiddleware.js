@@ -13,7 +13,7 @@ export const upload = multer({ storage });
 
 export const uploadToCloudinary = (req, res, next) => {
   if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded' });
+    return next();
   }
 
   const uploadStream = cloudinary.uploader.upload_stream(

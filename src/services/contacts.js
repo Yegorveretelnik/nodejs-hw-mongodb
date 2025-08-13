@@ -11,13 +11,14 @@ export const fetchAllContacts = async ({
   const skip = (page - 1) * perPage;
   const sort = { [sortBy]: sortOrder === 'asc' ? 1 : -1 };
   const combinedFilter = { userId, ...filter };
+
   const data = await Contact.find(combinedFilter)
     .sort(sort)
     .skip(skip)
     .limit(perPage);
 
   const totalItems = await Contact.countDocuments(combinedFilter);
-  const totalPages = Math.ceil(totalItems / perPage);
+  const totalPages = Math.ceil(totalItems / perPage) || 1;
 
   return {
     data,
@@ -41,6 +42,7 @@ export const createContact = async (payload) => {
 export const updateContact = async (contactId, payload, userId) => {
   return await Contact.findOneAndUpdate({ _id: contactId, userId }, payload, {
     new: true,
+    runValidators: true,
   });
 };
 

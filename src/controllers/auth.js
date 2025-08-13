@@ -5,6 +5,16 @@ import jwt from 'jsonwebtoken';
 import UsersCollection from '../models/User.js';
 import SessionsCollection from '../models/Session.js';
 
+const getBaseUrl = () => {
+  const base = process.env.APP_DOMAIN || 'http://localhost:3000';
+  return base.replace(/\/+$/, '');
+};
+const buildResetLink = (token) => {
+  return `${getBaseUrl()}/auth/reset-password?token=${encodeURIComponent(
+    token,
+  )}`;
+};
+
 export const register = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
@@ -32,12 +42,13 @@ export const login = async (req, res, next) => {
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000,
       sameSite: 'strict',
-      secure: process.env.NODE_ENV === 'production',
+      secure: false,
+      path: '/',
     });
 
     res.status(200).json({
       status: 200,
-      message: 'Successfully logged in an user!',
+      message: 'Successfully logged in a user!',
       data: { accessToken },
     });
   } catch (error) {
@@ -47,15 +58,21 @@ export const login = async (req, res, next) => {
 
 export const refresh = async (req, res, next) => {
   try {
-    const { refreshToken } = req.cookies;
-    const { accessToken, refreshToken: newRefreshToken } =
-      await authService.refreshSession(refreshToken);
+    const refreshTokenFromCookie = req.cookies?.refreshToken;
+    if (!refreshTokenFromCookie) {
+      throw createHttpError(401, 'Refresh token not provided');
+    }
 
-    res.cookie('refreshToken', newRefreshToken, {
+    const { accessToken, refreshToken } = await authService.refreshUserSession(
+      refreshTokenFromCookie,
+    );
+
+    res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000,
       sameSite: 'strict',
-      secure: process.env.NODE_ENV === 'production',
+      secure: false,
+      path: '/',
     });
 
     res.status(200).json({
@@ -70,17 +87,20 @@ export const refresh = async (req, res, next) => {
 
 export const logout = async (req, res, next) => {
   try {
-    const { refreshToken } = req.cookies;
+    const refreshTokenFromCookie = req.cookies?.refreshToken;
+    if (!refreshTokenFromCookie) {
+      throw createHttpError(401, 'Refresh token not provided');
+    }
 
-    await authService.logoutUser(refreshToken);
+    await authService.logoutUser(refreshTokenFromCookie);
 
-    res.clearCookie('refreshToken', {
-      httpOnly: true,
-      sameSite: 'strict',
-      secure: process.env.NODE_ENV === 'production',
+    res.clearCookie('refreshToken', { path: '/' });
+
+    res.status(200).json({
+      status: 200,
+      message: 'Successfully logged out a user!',
+      data: {},
     });
-
-    res.status(204).send();
   } catch (error) {
     next(error);
   }
@@ -92,27 +112,24 @@ export const sendResetEmail = async (req, res, next) => {
 
     const user = await UsersCollection.findOne({ email });
     if (!user) {
-      throw createHttpError(404, 'User not found!');
+      return res.status(200).json({
+        status: 200,
+        message:
+          'If the email exists in our system, a reset link has been sent.',
+        data: {},
+      });
     }
 
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ sub: String(user._id) }, process.env.JWT_SECRET, {
       expiresIn: '5m',
     });
 
-    const resetLink = `${process.env.APP_DOMAIN}/reset-password?token=${token}`;
-
-    try {
-      await sendResetPasswordEmail(email, resetLink);
-    } catch {
-      throw createHttpError(
-        500,
-        'Failed to send the email, please try again later.',
-      );
-    }
+    const resetLink = buildResetLink(token);
+    await sendResetPasswordEmail(email, resetLink);
 
     res.status(200).json({
       status: 200,
-      message: 'Reset password email has been successfully sent.',
+      message: 'Reset email sent',
       data: {},
     });
   } catch (error) {
@@ -127,17 +144,16 @@ export const resetPassword = async (req, res, next) => {
     let payload;
     try {
       payload = jwt.verify(token, process.env.JWT_SECRET);
-    } catch {
-      throw createHttpError(401, 'Token is expired or invalid.');
+    } catch (e) {
+      throw createHttpError(400, 'Invalid or expired token');
     }
 
-    const user = await UsersCollection.findOne({ email: payload.email });
+    const user = await UsersCollection.findById(payload.sub);
     if (!user) {
-      throw createHttpError(404, 'User not found!');
+      throw createHttpError(404, 'User not found');
     }
 
     await authService.changeUserPassword(user._id, password);
-
     await SessionsCollection.deleteMany({ userId: user._id });
 
     res.status(200).json({

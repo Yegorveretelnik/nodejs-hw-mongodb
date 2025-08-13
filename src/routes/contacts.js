@@ -20,6 +20,7 @@ router.use(authenticate);
 
 router.get('/', getAllContacts);
 router.get('/:contactId', getContactById);
+
 router.post(
   '/',
   upload.single('photo'),
@@ -27,6 +28,7 @@ router.post(
   validateBody(contactSchema),
   createContactController,
 );
+
 router.patch(
   '/:contactId',
   upload.single('photo'),
@@ -34,6 +36,7 @@ router.patch(
   validateBody(contactUpdateSchema),
   updateContactController,
 );
+
 router.delete('/:contactId', deleteContactController);
 
 export default router;

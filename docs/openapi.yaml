@@ -16,7 +16,7 @@ tags:
 servers:
   - url: http://localhost:3000
     description: Local development
-  - url: https://your-app.onrender.com
+  - url: https://nodejs-hw-mongodb-9-kr99.onrender.com
     description: Render deployment
 paths:
   /contacts:

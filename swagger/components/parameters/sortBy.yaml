@@ -1,0 +1,5 @@
+name: sortBy
+in: query
+schema:
+  type: string
+description: Field to sort by (default 'name')

@@ -1,0 +1,21 @@
+type: object
+properties:
+  name:
+    type: string
+    minLength: 3
+    maxLength: 20
+  phoneNumber:
+    type: string
+  email:
+    type: string
+    format: email
+    nullable: true
+  isFavourite:
+    type: boolean
+  contactType:
+    type: string
+    enum: [work, home, personal]
+  photo:
+    type: string
+    format: binary
+minProperties: 1

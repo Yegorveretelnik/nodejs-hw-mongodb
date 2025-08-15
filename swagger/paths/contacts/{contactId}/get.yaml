@@ -1,0 +1,21 @@
+tags: [Contacts]
+summary: Get a contact by id
+operationId: getContactById
+description: Returns a single contact that belongs to the authenticated user.
+security:
+  - bearerAuth: []
+parameters:
+  - $ref: '../../../../docs/openapi.yaml#/components/parameters/contactId'
+responses:
+  '200':
+    description: The contact was found
+    content:
+      application/json:
+        schema:
+          $ref: '../../../../docs/openapi.yaml#/components/schemas/ContactResponse'
+  '404':
+    description: Contact not found
+    content:
+      application/json:
+        schema:
+          $ref: '../../../../docs/openapi.yaml#/components/schemas/ErrorResponse'

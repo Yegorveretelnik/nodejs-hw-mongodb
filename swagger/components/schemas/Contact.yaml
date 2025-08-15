@@ -1,0 +1,40 @@
+type: object
+properties:
+  _id:
+    type: string
+    description: Contact unique identifier
+    example: '66b8e8d1c9a9f65a3d5a7b12'
+  userId:
+    type: string
+    description: Owner user id
+    example: '66b8e7f2d9ab6e1cd1234567'
+  name:
+    type: string
+    example: 'Alice Adams'
+  phoneNumber:
+    type: string
+    example: '+1-555-123-4567'
+  email:
+    type: string
+    format: email
+    nullable: true
+    example: 'alice@example.com'
+  isFavourite:
+    type: boolean
+    default: false
+  contactType:
+    type: string
+    enum: [work, home, personal]
+    example: personal
+  photo:
+    type: string
+    nullable: true
+    description: Public URL of contact avatar hosted on Cloudinary
+    example: 'https://res.cloudinary.com/demo/image/upload/contacts/alice.jpg'
+  createdAt:
+    type: string
+    format: date-time
+  updatedAt:
+    type: string
+    format: date-time
+required: [_id, userId, name, phoneNumber, contactType, createdAt, updatedAt]

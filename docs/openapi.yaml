@@ -1,0 +1,68 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Contacts API
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  description: |
+    REST API for managing personal contacts. Supports authentication with JWT bearer tokens,
+    pagination, sorting, filtering, image uploads to Cloudinary, and email flows for password reset.
+tags:
+  - name: Contacts
+    description: Operations with contact entities
+  - name: Auth
+    description: Authentication and password reset flows
+servers:
+  - url: http://localhost:3000
+    description: Local development
+  - url: https://your-app.onrender.com
+    description: Render deployment
+paths:
+  /contacts:
+    get:
+      $ref: ../swagger/paths/contacts/get.yaml
+    post:
+      $ref: ../swagger/paths/contacts/post.yaml
+  /contacts/{contactId}:
+    get:
+      $ref: ../swagger/paths/contacts/{contactId}/get.yaml
+    patch:
+      $ref: ../swagger/paths/contacts/{contactId}/patch.yaml
+    delete:
+      $ref: ../swagger/paths/contacts/{contactId}/delete.yaml
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    Contact:
+      $ref: ../swagger/components/schemas/Contact.yaml
+    ContactCreate:
+      $ref: ../swagger/components/schemas/ContactCreate.yaml
+    ContactUpdate:
+      $ref: ../swagger/components/schemas/ContactUpdate.yaml
+    PaginatedContactsResponse:
+      $ref: ../swagger/components/schemas/PaginatedContactsResponse.yaml
+    ContactResponse:
+      $ref: ../swagger/components/schemas/ContactResponse.yaml
+    DeleteResponse:
+      $ref: ../swagger/components/schemas/DeleteResponse.yaml
+    ErrorResponse:
+      $ref: ../swagger/components/schemas/ErrorResponse.yaml
+  parameters:
+    contactId:
+      $ref: ../swagger/components/parameters/contactId.yaml
+    page:
+      $ref: ../swagger/components/parameters/page.yaml
+    perPage:
+      $ref: ../swagger/components/parameters/perPage.yaml
+    sortBy:
+      $ref: ../swagger/components/parameters/sortBy.yaml
+    sortOrder:
+      $ref: ../swagger/components/parameters/sortOrder.yaml
+    contactType:
+      $ref: ../swagger/components/parameters/contactType.yaml
+    isFavourite:
+      $ref: ../swagger/components/parameters/isFavourite.yaml

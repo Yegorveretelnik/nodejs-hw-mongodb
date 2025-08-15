@@ -1,0 +1,25 @@
+type: object
+properties:
+  name:
+    type: string
+    minLength: 3
+    maxLength: 20
+    example: 'Alice Adams'
+  phoneNumber:
+    type: string
+    example: '+1-555-123-4567'
+  email:
+    type: string
+    format: email
+    nullable: true
+  isFavourite:
+    type: boolean
+  contactType:
+    type: string
+    enum: [work, home, personal]
+    example: personal
+  photo:
+    type: string
+    format: binary
+    description: Optional avatar file (multipart/form-data)
+required: [name, phoneNumber, contactType]

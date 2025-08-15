@@ -1,0 +1,21 @@
+tags: [Contacts]
+summary: Delete a contact
+operationId: deleteContact
+description: Deletes a contact by id.
+security:
+  - bearerAuth: []
+parameters:
+  - $ref: '../../../../docs/openapi.yaml#/components/parameters/contactId'
+responses:
+  '200':
+    description: Contact deleted
+    content:
+      application/json:
+        schema:
+          $ref: '../../../../docs/openapi.yaml#/components/schemas/DeleteResponse'
+  '404':
+    description: Contact not found
+    content:
+      application/json:
+        schema:
+          $ref: '../../../../docs/openapi.yaml#/components/schemas/ErrorResponse'

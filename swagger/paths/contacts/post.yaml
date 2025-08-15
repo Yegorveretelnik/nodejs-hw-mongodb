@@ -1,0 +1,19 @@
+tags: [Contacts]
+summary: Create a new contact
+operationId: createContact
+description: Create a new contact. You may optionally upload a **photo** file.
+security:
+  - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    multipart/form-data:
+      schema:
+        $ref: '../../../docs/openapi.yaml#/components/schemas/ContactCreate'
+responses:
+  '201':
+    description: Contact created
+    content:
+      application/json:
+        schema:
+          $ref: '../../../docs/openapi.yaml#/components/schemas/ContactResponse'

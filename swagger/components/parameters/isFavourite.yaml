@@ -1,0 +1,5 @@
+name: isFavourite
+in: query
+schema:
+  type: boolean
+description: Filter by favourite flag

@@ -1,0 +1,21 @@
+tags: [Contacts]
+summary: Get a paginated list of contacts
+operationId: getAllContacts
+description: >
+  Returns a paginated list of contacts for the authenticated user. Supports filtering by **contactType** and **isFavourite** and sorting.
+security:
+  - bearerAuth: []
+parameters:
+  - $ref: '../../../docs/openapi.yaml#/components/parameters/page'
+  - $ref: '../../../docs/openapi.yaml#/components/parameters/perPage'
+  - $ref: '../../../docs/openapi.yaml#/components/parameters/sortBy'
+  - $ref: '../../../docs/openapi.yaml#/components/parameters/sortOrder'
+  - $ref: '../../../docs/openapi.yaml#/components/parameters/contactType'
+  - $ref: '../../../docs/openapi.yaml#/components/parameters/isFavourite'
+responses:
+  '200':
+    description: A paginated contacts list
+    content:
+      application/json:
+        schema:
+          $ref: '../../../docs/openapi.yaml#/components/schemas/PaginatedContactsResponse'
